@@ -11,7 +11,6 @@ import com.google.android.gms.maps.SupportMapFragment
 
 class MapStationActivity : Fragment () {
 
-    lateinit var mapFragment: SupportMapFragment
     lateinit var googleMap: GoogleMap
 
     override fun onCreateView(
@@ -20,10 +19,12 @@ class MapStationActivity : Fragment () {
         savedInstanceState: Bundle?
     ): View? {
 
-        mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(OnMapReadyCallback {
-            googleMap = it
-        })
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        if (mapFragment != null){
+            mapFragment.getMapAsync(OnMapReadyCallback {
+                googleMap = it
+            })
+        }
 
         return inflater.inflate(R.layout.fragment_map_station, container, false)
     }
