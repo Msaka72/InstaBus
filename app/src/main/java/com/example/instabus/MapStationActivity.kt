@@ -40,15 +40,8 @@ class MapStationActivity : Fragment (), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap!!
-        // Add a markers and move the camera
 
-
-        val location1 = LatLng(41.3985182,2.1917991)
-        mMap.addMarker(MarkerOptions().position(location1).title("My Location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location1))
-
-
-        val json = getJson() // your json value here
+        val json = getJson()
         val topic = Gson().fromJson(json, Json4Kotlin_Base::class.java)
 
         topic.data.nearstations.forEach {
