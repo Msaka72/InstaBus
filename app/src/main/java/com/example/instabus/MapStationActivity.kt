@@ -1,5 +1,6 @@
 package com.example.instabus
 
+import Json4Kotlin_Base
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
-data class Localisation(val id: Int, val street_name: String, val lat: Float, val lon: Float)
+import com.google.gson.Gson
 
 class MapStationActivity : Fragment (), OnMapReadyCallback {
 
@@ -20,14 +20,12 @@ class MapStationActivity : Fragment (), OnMapReadyCallback {
 
     companion object {
         var mapFragment : SupportMapFragment?=null
-        val TAG: String = MapStationActivity::class.java.simpleName
-        fun newInstance() = MapStationActivity()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var rootView = inflater.inflate(R.layout.fragment_map_station, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_map_station, container, false)
 
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
@@ -35,42 +33,28 @@ class MapStationActivity : Fragment (), OnMapReadyCallback {
         return rootView
     }
 
+    private fun getJson(): String? {
+        val jsonString: String = getResources().openRawResource(R.raw.get_bus_station_request).bufferedReader().use { it.readText() }
+        return jsonString
+    }
+
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap!!
         // Add a markers and move the camera
+
+
         val location1 = LatLng(41.3985182,2.1917991)
         mMap.addMarker(MarkerOptions().position(location1).title("My Location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location1))
-    }
 
-    /*
-    lateinit var googleMap: GoogleMap
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+        val json = getJson() // your json value here
+        val topic = Gson().fromJson(json, Json4Kotlin_Base::class.java)
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-
-        if (mapFragment != null){
-            mapFragment.getMapAsync(OnMapReadyCallback {
-                googleMap = it
-
-            })
+        topic.data.nearstations.forEach {
+            val location1 = LatLng(it.lat,it.lon)
+            mMap.addMarker(MarkerOptions().position(location1).title(it.street_name))
         }
-        else {}
-
-        return inflater.inflate(R.layout.fragment_map_station, container, false)
-
     }
 
-    override fun onMapReady(p0: GoogleMap) {
-        googleMap = p0
-
-
-        val location1 = LatLng(41.3985182,2.1917991)
-        googleMap.addMarker(MarkerOptions().title("My Location").position(location1))
-
-    }
-
-     */
 }
