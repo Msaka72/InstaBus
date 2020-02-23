@@ -18,4 +18,3 @@ class ListStationActivity : Fragment () {
         return null
     }
 }
-

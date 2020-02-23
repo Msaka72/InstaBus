@@ -49,5 +49,4 @@ class MapStationActivity : Fragment (), OnMapReadyCallback {
             mMap.addMarker(MarkerOptions().position(location1).title(it.street_name))
         }
     }
-
 }
